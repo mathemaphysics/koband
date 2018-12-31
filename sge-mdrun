@@ -1,0 +1,160 @@
+#!/bin/bash
+
+###############################
+# Job name and log/err output #
+###############################
+#$ -S /bin/bash
+#$ -V
+#$ -N c8ntf2.qlsmd.min.8
+#$ -r n
+#$ -e $JOB_ID.err
+#$ -o $JOB_ID.log
+#$ -q UI-HM
+#$ -cwd
+
+#########################
+# Important run details #
+#########################
+###$ -m abe
+###$ -M ryan-p-daly@uiowa.edu
+#$ -pe 24cpn 24
+###$ -l 
+###$ -ckpt user
+###$ -l h_rt=8:00:00
+
+########################
+# Load modules and set #
+# up the environment   #
+########################
+source ~/.bash_profile intel-composer_xe_2015.3.187
+
+# Tell everyone what nodes are being used
+if [ -f "${PE_HOSTFILE}" ]; then
+    echo "Nodes:"
+    cat "${PE_HOSTFILE}"
+else
+    echo "WARNING: No host file found."
+fi
+
+idx="8"
+jobid="${JOB_ID}"
+jobidin=""
+while getopts "i:j:k:h" opt; do
+    case ${opt} in
+        h)
+            echo "Usage: $(basename $0) [-h] [-i index] [-j jobid] [-k jobid_in]"
+            exit 0
+            ;;
+        i)
+            idx="${OPTARG}"
+            ;;
+        j)
+            jobid="${OPTARG}"
+            ;;
+        k)
+            jobidin="${OPTARG}"
+            ;;
+        ?|*)
+            echo "No such option available."
+            ;;
+    esac
+done
+pref="${idx:+${idx}_}"
+suff="${jobid:+_${jobid}}"
+suffin="${jobidin:+_${jobidin}}"
+
+# Check for presence of all required files
+if [ ! -f ${pref}topol.top ]; then
+    exit 127 # Unsigned byte => -1
+fi
+if [ ! -f ${pref}step.mdp ]; then
+    exit 126 # Unsigned byte => -2
+fi
+if [ ! -f ${pref}confin.gro ]; then
+    exit 125 # Unsigned byte => -3
+fi
+
+# Identify locations of binaries needed
+GMXBIN="/opt/gromacs/4.6.5/bin"
+GROMPP="${GMXBIN}/grompp_d"
+MDRUN="${GMXBIN}/mdrun_d"
+
+# Set the call string
+MPIRUN_GROMPP=""
+MPIARGS_GROMPP=""
+EXENAME_GROMPP="${GROMPP}"
+EXEARGS_GROMPP="-o ${pref}topol${suff}.tpr \
+    -p ${pref}topol${suffin}.top \
+    -f ${pref}step${suffin}.mdp \
+    -c ${pref}confin${suffin}.gro \
+    -po ${pref}mdout${suff}.mdp \
+    -pp ${pref}processed${suff}.top \
+    -maxwarn 100"
+if [ -f "${pref}trajin${suffin}.trr" ]; then
+    EXEARGS_GROMPP="${EXEARGS_GROMPP} -t ${pref}trajin${suffin}.trr"
+fi
+if [ -f "${pref}index${suffin}.ndx" ]; then
+    EXEARGS_GROMPP="${EXEARGS_GROMPP} -n ${pref}index${suffin}.ndx"
+fi
+
+# Copy files to suffix them with ${JOB_ID}
+for name in topol.top step.mdp confin.gro index.ndx trajin.trr
+do
+    srce="${pref}${name}"
+    srcf="${srce}${suffin}"
+    if [ -f "${srcf}" ]; then
+        targ="$(echo "${srce}" | sed 's/\(^.*\)\.\([^\.\t]\+\)/\1'${suff}'\.\2/g')"
+        echo "Copying $(printf "%16s" ${srcf}) => $(printf "%16s" ${targ})" >&2
+        cp "${srcf}" "${targ}"
+    fi
+done
+
+# Set the call string for first step
+CALL_STRING_GROMPP="${MPIRUN_GROMPP} ${MPIARGS_GROMPP} ${EXENAME_GROMPP} ${EXEARGS_GROMPP}"
+
+# Output start and finish times
+echo "Running in $(pwd)"
+echo "Calling:"
+echo ${CALL_STRING_GROMPP}
+echo "Started at $(date)"
+eval ${CALL_STRING_GROMPP}
+echo "Finished ${EXENAME_GROMPP} at $(date)"
+
+# Set up location of mpirun
+MPIRUN_MDRUN=""
+MPIARGS_MDRUN=""
+EXENAME_MDRUN="${MDRUN}"
+EXEARGS_MDRUN="-v -c ${pref}confout${suff}.gro \
+   -e ${pref}ener${suff}.edr \
+   -g ${pref}md${suff}.log \
+   -s ${pref}topol${suff}.tpr \
+   -o ${pref}traj${suff}.trr \
+   -x ${pref}traj${suff}.xtc \
+   -cpo ${pref}state${suff}.cpt \
+   -mtx ${pref}nm${suff}.mtx"
+
+# If an index file of the appropriate index and jobid shows up
+# then you can at least load it
+if [ -f "${pref}index${suff}.ndx" ]; then
+    EXEARGS_MDRUN="${EXEARGS_MDRUN} -n ${pref}index${suff}.ndx"
+fi
+
+# Important if using -ckpt in SGE or equivalent in any other queue
+# Variable RESTARTED is available for SGE as far as I know; no guarantee
+# for any other queue manager; writes a checkpoint every 5 minutes here
+if [ $RESTARTED -eq 1 ] && [ -f "${pref}state${suff}.cpt" ]; then
+    EXEARGS_MDRUN="${EXEARGS_MDRUN} -cpi state.cpt -cpt 5 -append"
+fi
+
+# Set the call string
+CALL_STRING_MDRUN="${MPIRUN_MDRUN} ${MPIARGS_MDRUN} ${EXENAME_MDRUN} ${EXEARGS_MDRUN}"
+
+# Output start and finish times
+echo "Running in $(pwd)"
+echo "Calling:"
+echo ${CALL_STRING_MDRUN}
+echo "Started at $(date)"
+eval ${CALL_STRING_MDRUN}
+echo "Finished ${EXENAME_MDRUN} at $(date)"
+
+# vim: tabstop=4:softtabstop=4:shiftwidth=4:expandtab:smarttab

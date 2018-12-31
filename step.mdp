@@ -1,0 +1,93 @@
+title               = production-run
+cpp                 = /lib/cpp
+define              =
+constraints         =  
+integrator          = md
+dt                  = 0.001	; ps !
+nsteps              = 5000000
+nstcomm             = 1
+nstxout             = 10        ;5
+nstvout             = 10        ;5
+nstxtcout           = 0         ;1000
+nstfout             = 10
+nstlog              = 100
+nstenergy           = 5
+nstlist             = 1
+ns_type             = grid
+
+; Periodic boundary conditions: xyz or no = 
+pbc                 = xyz
+rlist               = 0.74
+rcoulomb            = 0.74
+rvdw                = 0.74
+;rcoulomb-switch    = 1.0
+;rvdw-switch        = 1.0
+
+; OPTIONS FOR ELECTROSTATICS AND VDW = 
+; Method for doing electrostatics = 
+;coulombtype         = PME ; Only for situation in which we have charges != 0.0
+;coulombtype         = Cut-off
+; Method for doing Van der Waals = 
+;vdw-type           = Cut-off     ;Shift
+;cut-off lengths    = 
+;rvdw-switch        = 0.9
+
+; Apply long range dispersion corrections for Energy and Pressure = 
+
+DispCorr            = EnerPres
+; Spacing for the PME/PPPM FFT grid = 
+fourierspacing      = 0.08
+; FFT grid size, when a value is 0 fourierspacing will be used = 
+fourier_nx          = 0
+fourier_ny          = 0
+fourier_nz          = 0
+; EWALD/PME/PPPM parameters = 
+pme_order           = 6
+ewald_rtol          = 1e-05
+ewald_geometry      = 3d
+epsilon_surface     = 0
+optimize_fft        = yes
+; Nose-Hoover temperature coupling is on
+Tcoupl              = Nose-Hoover
+ref-t               = 588.52 588.52
+tau-t               = 1.0 1.0
+tc-grps             = kaA kaB
+
+; Energy monitoring
+energygrps	    = kaA kaB
+; Pressure coupling is on
+Pcoupl              = no
+Pcoupltype          = isotropic
+ref-p               = 1.0 1.0
+tau-p               = 1.0 1.0
+compressibility     = 4.5e-5
+
+; Generate velocites is on at 588.52 K,
+; which is reduced temperature of 1.0
+gen_vel             = yes
+gen_temp            = 588.52
+gen_seed            = 43697
+
+; OPTIONS FOR BONDS
+constraints         = none
+; Type of constraint algorithm
+constraint-algorithm = Lincs
+; Do not constrain the start configuration
+continuation         = no
+; Use successive overrelaxation to reduce the number of shake iterations
+Shake-SOR            = no
+; Relative tolerance of shake
+shake-tol            = 0.0001
+; Highest order in the expansion of the constraint coupling matrix
+lincs-order          = 4
+; Number of iterations in the final step of LINCS. 1 is fine for
+; normal simulations, but use 2 to conserve energy in NVE runs.
+; For energy minimization with constraints it should be 4 to 8.
+lincs-iter           = 2
+; Lincs will write a warning to the stderr if in one step a bond
+; rotates over more degrees than
+lincs-warnangle      = 30
+; Convert harmonic bonds to morse potentials
+morse                = no
+
+

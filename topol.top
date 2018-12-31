@@ -1,0 +1,46 @@
+;Built some Kob-Andersen parameters for
+;this system by assuming sigma and epsilon
+;parameters of atom type A were identical
+;to those of argon, i.e. atom type opls_097
+;in the OPLS-AA forcefield; parameters for
+;atom type B were
+;   sigBB = 0.88 * sigAA
+;   epsBB = 0.50 * epsAA,
+;and combination rule explicitly set in
+;nonbond_params section using
+;   sigAB = 0.80 * sigAA
+;   epsAB = 1.50 * epsAA
+;
+
+[ defaults ]
+; nbfunc    comb-rule   gen-pairs   fudgeLJ fudgeQQ
+       1            2          no       0.5     0.5
+
+[ atomtypes ]
+;name  bond_type    mass   charge  ptype        sigma        epsilon
+  kaA        kaA  39.948      0.0      A  3.40100E-01    9.78638E-01
+  kaB        kaB  39.948      0.0      A  2.99288E-01    4.89319E-01
+
+[ nonbond_params ]
+;   i     j  func        sigma       epsilon
+  kaA   kaB     1  2.72080E-01   1.46796E-00
+
+[ moleculetype ]
+KAA     3
+
+[ atoms ]
+    1   kaA   1   KAA    kaA  1   0.000
+
+[ moleculetype ]
+KAB     3
+
+[ atoms ]
+    1   kaB   1   KAB    kaB  1   0.000
+
+[ system ]
+KA
+
+[ molecules ]
+KAA   6400
+KAB   1600
+

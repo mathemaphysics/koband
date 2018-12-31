@@ -1,0 +1,13 @@
+tolerance 2.0
+output 0_confout.pdb
+filetype pdb
+structure 0_kaA.pdb
+  resnumbers 3
+  number [% GET NA %]
+  inside cube 0. 0. 0. [% GET dx %]
+end structure
+structure 0_kaB.pdb
+  resnumbers 3
+  number [% GET NB %]
+  inside cube 0. 0. 0. [% GET dx %]
+end structure

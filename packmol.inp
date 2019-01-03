@@ -1,13 +1,15 @@
+#include "config.h"
+
 tolerance 2.0
-output 0_confout.pdb
+output 01_confout.pdb
 filetype pdb
-structure 0_kaA.pdb
+structure kaA.pdb
   resnumbers 3
-  number [% GET NA %]
-  inside cube 0. 0. 0. [% GET dx %]
+  number NA
+  inside cube 0. 0. 0. dx
 end structure
-structure 0_kaB.pdb
+structure kaB.pdb
   resnumbers 3
-  number [% GET NB %]
-  inside cube 0. 0. 0. [% GET dx %]
+  number NB
+  inside cube 0. 0. 0. dx
 end structure

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+Project:	[% GET project %]
+Log File:	[% GET logfile %]
+
+The box:	[% GET dx %]
+Number A:	[% GET na %]
+Number B:	[% GET nb %]
+
+

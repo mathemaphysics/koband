@@ -35,11 +35,10 @@ my $vars = {
 my $template = Template->new();
 
 foreach ( @ifiles ) {
-    print $_, "\n";
     my $ifile = $_;
     s/.tt$//;
     my $ofile = $_;
-    say "$ofile";
+    say $ifile, " => ", $ofile;
     $template->process($ifile, $vars, $ofile)
         || die "Template process failed: ", $template->error(), "\n";
 }

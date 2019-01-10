@@ -7,13 +7,12 @@
 
 int plugin_is_GPL_compatible;
 
-char * hello (const char *nm, unsigned int argc, char **argv)
+char *hello (const char *nm, unsigned int argc, char **argv)
 {
-	int len = strlen (argv[0]) + 7;
-	char *buf = gmk_alloc (len);
-	sprintf (buf, "echo Hello %s", argv[0]);
-	printf("hello!\n");
-    gmk_free(buf);
+	int len = strlen (argv[0]);
+	char *buf = gmk_alloc (len+16);
+	sprintf (buf, "Hello, %s", argv[0]);
+	printf("Running stuff: %s\n", buf);
 	return NULL;
 }
 

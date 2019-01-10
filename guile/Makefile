@@ -5,9 +5,9 @@
 # an actual extended gnumake module compatible with
 # GPL and <gnumake.h>.
 
-.PHONY: all clean tempfile
+.PHONY: all clean
 
-all: tempfile testfile01.txt guileext01-module.so guileext02-gnumake.so
+all: guileext01-module.so guileext02-gnumake.so 
 
 ########################################
 # Build guile extension just for guile #
@@ -44,29 +44,19 @@ endef
 # Internalize the Guile IO functions
 $(guile $(GUILEIO))
 
-testfile01.txt:
-	@echo "TARGET: $@"
-	@echo "Added functions for writing to files"
-	$(guile (mkopen "testfile01.txt" "w"))
-	$(guile (mkwrite "This is some stuff"))
-	$(guile (mkclose))
-
 #######################################
 # Compiling actual GNU make extension #
 #######################################
 
--load guileext02-gnumake.so
+.PHONY: check
 
-tempfile: guileext02-gnumake.so
-	@echo "Making temporary file: $(mk-temp tmpfile.)"
+-load guileext02-gnumake.so
 
 guileext02-gnumake.so: guileext02-gnumake.c
 	$(CC) -shared -fPIC -o $@ $<
 
-.PHONY: check
-
 check:
-	$(hello "poopdapants2")
+	$(hello poopdapants2)
 
 clean:
 	rm -f tmpfile.*

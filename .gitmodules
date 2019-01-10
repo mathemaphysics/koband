@@ -1,0 +1,3 @@
+[submodule "guile"]
+	path = guile
+	url = ./guile/

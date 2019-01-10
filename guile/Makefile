@@ -47,8 +47,8 @@ $(guile $(GUILEIO))
 testfile01.txt:
 	@echo "TARGET: $@"
 	@echo "Added functions for writing to files"
-	$(guile (mkopen "testfile01.txt" "w")) \
-	$(guile (mkwrite "This is some stuff")) \
+	$(guile (mkopen "testfile01.txt" "w"))
+	$(guile (mkwrite "This is some stuff"))
 	$(guile (mkclose))
 
 #######################################

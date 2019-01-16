@@ -43,5 +43,7 @@ foreach ( @ifiles ) {
         || die "Template process failed: ", $template->error(), "\n";
 }
 
+# Now run whatever needed on CLI
+system("echo 'Running scripts'");
 
 # vim: tw=65:ts=4:sts=4:sw=4:et:sta

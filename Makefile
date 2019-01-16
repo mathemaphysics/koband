@@ -1,5 +1,10 @@
 # Makefile
 
+# Include macros here
+define generate_script =
+
+endef
+
 packmol.inp: config.tt
 	# Make packmol.inp from parameters
 

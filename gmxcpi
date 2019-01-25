@@ -1,0 +1,218 @@
+#!/bin/bash
+
+idx=""
+jobid="${JOB_ID}"
+jobidin=""
+while getopts "i:j:k:h" opt; do
+    case ${opt} in
+        h)
+            echo "Usage: $(basename $0) [-h] [-i index] [-j jobid] [-k jobid_in]"
+            exit 0
+            ;;
+        i)
+            idx="${OPTARG}"
+            ;;
+        j)
+            jobid="${OPTARG}"
+            ;;
+        k)
+            jobidin="${OPTARG}"
+            ;;
+        ?|*)
+            echo "No such option available."
+            ;;
+    esac
+done
+echo "Idx = ${idx}"
+pref="${idx:+${idx}_}"
+suff="${jobid:+_${jobid}}"
+suffin="${jobidin:+_${jobidin}}"
+
+if [ -z "${pref}" ]; then
+    echo "Must specify a step index"
+    exit 127
+fi
+
+# Check for presence of all required files
+if [ ! -f ${pref}topol.top ]; then
+    echo "Missing ${pref}topol.top" >&2
+    exit 126 # Unsigned byte => -1
+else
+    echo "Using topology file ${pref}topol.top" >&2
+    file_top="${pref}topol.top"
+fi
+if [ ! -f ${pref}step.mdp ]; then
+    echo "Missing ${pref}step.mdp" >&2
+    exit 125 # Unsigned byte => -2
+else
+    echo "Using MD parameters in ${pref}step.mdp" >&2
+    file_mdp="${pref}step.mdp"
+fi
+if [ ! -f ${pref}confout${suffin}.gro ]; then
+    echo "Missing ${pref}confout${suffin}.gro" >&2
+    echo "Checking to see if similar exist" >&2
+    read -a files <<<$(ls -rt1 ./${pref}confout*.gro | xargs)
+    if [ ${#files[@]} -gt 0 ]; then
+        echo "Checking files found:" >&2
+        for ((i=0;i<${#files[@]};i++))
+        do
+            echo "(${i}) ${files[i]}" >&2
+        done
+        echo "Using most recent: ${files[0]}" >&2
+        echo -n "Okay? (y/N): "
+        read ans
+        if [ "${ans}" = "y" ] || [ "${ans}" = "Y" ]; then
+            echo "Okay. Using GRO file ${files[0]}" >&2
+            file_gro="${files[0]}"
+        else
+            if [[ ${ans} =~ ^[0-9]+$ ]]; then
+                if [ ${ans} -ge ${#files[@]} ]; then
+                    echo "Bad file index. Bye." >&2
+                    exit 125
+                else
+                    echo "Using file ${ans}, ${files[${ans}]}"
+                    file_gro="${files[${ans}]}"
+                fi
+            else
+                echo "Cannot resolve which confin.gro to use" >&2
+                exit 124 # Unsigned byte => -3
+            fi
+        fi
+    else
+        echo "Could not find any alternative matching files"
+        exit 123 # Unsigned byte => -4
+    fi
+else
+    file_gro="${pref}confout${suffin}.gro"
+fi
+
+if [ ! -f ${pref}traj${suffin}.trr ]; then
+    echo "Missing ${pref}traj${suffin}.trr" >&2
+    echo "Checking to see if similar exist" >&2
+    read -a files <<<$(ls -rt1 ./${pref}traj*.trr | xargs)
+    if [ ${#files[@]} -gt 0 ]; then
+        echo "Checking files found:" >&2
+        for ((i=0;i<${#files[@]};i++))
+        do
+            echo "(${i}) ${files[i]}" >&2
+        done
+        echo "Using most recent: ${files[0]}" >&2
+        echo -n "Okay? (y/N): "
+        read ans
+        if [ "${ans}" = "y" ] || [ "${ans}" = "Y" ]; then
+            echo "Okay. Using TRR file ${files[0]}" >&2
+            file_trr="${files[0]}"
+        else
+            if [[ ${ans} =~ ^[0-9]+$ ]]; then
+                if [ ${ans} -ge ${#files[@]} ]; then
+                    echo "Bad file index. Bye." >&2
+                    exit 125
+                else
+                    echo "Using file ${ans}, ${files[${ans}]}"
+                    file_trr="${files[${ans}]}"
+                fi
+            else
+                echo "Cannot resolve which traj.trr to use" >&2
+                exit 124 # Unsigned byte => -3
+            fi
+        fi
+    else
+        echo "Could not find any alternative matching files"
+        exit 123 # Unsigned byte => -4
+    fi
+else
+    file_trr="${pref}traj${suffin}.trr"
+fi
+
+if [ ! -e "$((idx+1))_topol.top" ]; then
+    echo "Copying ${file_top} => $((idx+1))_topol.top" >&2
+    cp ${file_top} $((idx+1))_topol.top
+else
+    echo "File $((idx+1))_topol.top already exists" >&2
+    echo -n "Overwrite? (y/N): " >&2
+    read ans
+    if [ "${ans}" = "y" ] || [ "${ans}" = "Y" ]; then
+        cp ${file_top} $((idx+1))_topol.top
+    else
+        echo "Continuing with file already present" >&2
+    fi
+fi
+
+if [ ! -e "$((idx+1))_step.mdp" ]; then
+    echo "Copying ${file_mdp} => $((idx+1))_step.mdp" >&2
+    cp ${file_mdp} $((idx+1))_step.mdp
+else
+    echo "File $((idx+1))_step.mdp already exists" >&2
+    echo -n "Overwrite? (y/N): " >&2
+    read ans
+    if [ "${ans}" = "y" ] || [ "${ans}" = "Y" ]; then
+        cp ${file_mdp} $((idx+1))_step.mdp
+    else
+        echo "Continuing with file already present" >&2
+    fi
+fi
+cp ${file_mdp} $((idx+1))_step.mdp
+
+if [ ! -e "$((idx+1))_confin.gro" ]; then
+    echo "Linked ${file_gro} => $((idx+1))_confin.gro" >&2
+    ln -s ${file_gro} $((idx+1))_confin.gro
+else
+    echo "Link already exists" >&2
+    echo -n "Remove and relink? (y/N): "
+    read ans
+    if [ "${ans}" = "y" ] || [ "${ans}" = "Y" ]; then
+        rm $((idx+1))_confin.gro
+        ln -s ${file_gro} $((idx+1))_confin.gro
+    else
+        echo "Cannot continue without this link as input" >&2
+        exit 122
+    fi
+fi
+
+if [ ! -e "$((idx+1))_trajin.trr" ]; then
+    echo "Linked ${file_trr} => $((idx+1))_trajin.trr" >&2
+    ln -s ${file_trr} $((idx+1))_trajin.trr
+else
+    echo "Link already exists" >&2
+    echo -n "Remove and relink? (y/N): "
+    read ans
+    if [ "${ans}" = "y" ] || [ "${ans}" = "Y" ]; then
+        rm $((idx+1))_trajin.trr
+        ln -s ${file_trr} $((idx+1))_trajin.trr
+    else
+        echo "Cannot continue without this link as input" >&2
+        exit 122
+    fi
+fi
+
+fntmpin="${pref}sge-mdrun"
+echo -n "Copy and update submit scripts? (y/N): " >&2
+read ans
+if [ "${ans}" = "y" ] || [ "${ans}" = "Y" ]; then
+    sed -r -e '/^#\$ \-N /s/'${idx}'/'$((idx+1))'/g' -e '/^[ \t]*idx="[^"]".*/s/'${idx}'/'$((idx+1))'/g' ${pref}sge-mdrun > .$((idx+1))_sge-mdrun.tmp
+    fntmpin=".$((idx+1))_sge-mdrun.tmp"
+fi
+
+echo -n "Update parallel methodology for this run? (y/N): " >&2
+read ans
+if [ "${ans}" = "y" ] || [ "${ans}" = "Y" ]; then
+    echo -n "Enter number of threads for thread MPI (0 for no tMPI): " >&2
+    read ans
+    if [ "${ans}" -gt 0 ]; then
+        echo "Adding -nt ${ans} switch to EXENAME_MDRUN" >&2
+        sed -r -e '/^[ \t]*EXENAME_MDRUN="\$\{MDRUN\} (-nt [0-9]+)?"/s/\$\{MDRUN\} (-nt [0-9]+)?/${MDRUN} -nt '${ans}'/g' ${fntmpin} > $((idx+1))_sge-mdrun
+    else
+        echo "Removing -nt switch from arguments" >&2
+        sed -r -e '/^[ \t]*EXENAME_MDRUN="\$\{MDRUN\} (-nt [0-9]+)?"/s/\$\{MDRUN\} (-nt [0-9]+)?/${MDRUN} /g' ${fntmpin} > $((idx+1))_sge-mdrun
+    fi
+fi
+
+if [ -f ".$((idx+1))_sge-mdrun.tmp" ]; then
+    echo -n "Cleaning up temporary files... " >&2
+    rm -rf ".$((idx+1))_sge-mdrun.tmp"
+    echo "Done." >&2
+fi
+
+echo "Finished" >&2
+
+# vim: tabstop=4:softtabstop=4:shiftwidth=4:expandtab:smarttab

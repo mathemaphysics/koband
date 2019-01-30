@@ -17,8 +17,8 @@
 
 [ atomtypes ]
 ;name  bond_type    mass   charge  ptype        sigma        epsilon
-  [% GET atmnma -%]        [% GET atmnma -%]  [% GET ma -%]      [% GET za -%]      A  [% GET sigaa -%]    [% GET epsaa -%]
-  [% GET atmnmb -%]        [% GET atmnmb -%]  [% GET mb -%]      [% GET zb -%]      A  [% GET sigbb -%]    [% GET epsbb -%]
+  [% GET atmnma -%]        [% GET atmnma -%]  [% GET ma -%]      [% GET za -%]      A  [% GET sigaa -%]    [% GET epsaa %]
+  [% GET atmnmb -%]        [% GET atmnmb -%]  [% GET mb -%]      [% GET zb -%]      A  [% GET sigbb -%]    [% GET epsbb %]
 
 [ nonbond_params ]
 ;   i     j  func        sigma       epsilon

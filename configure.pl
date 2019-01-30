@@ -100,13 +100,12 @@ sub koband4to1params {
     my $rhor = 1.2;
     my $rho = $rhor / ( $sigAA / $nm_to_m )**3;
 
-    # Store ratios of each variable
-    # relative to the corresponding
-    # AA Lennard-Jones values
-    my $sigABr = 0.80;  # These values are =====
-    my $sigBBr = 0.88;  # part of what defines =
-    my $epsABr = 1.50;  # the Kob-Andersen 80:20
-    my $epsBBr = 0.50;  # liquid ===============
+    # Store ratios of each variable relative to
+    # the corresponding AA Lennard-Jones values
+    my $sigABr = 0.80;  # These values are ===== #
+    my $sigBBr = 0.88;  # part of what defines = #
+    my $epsABr = 1.50;  # the Kob-Andersen 80:20 #
+    my $epsBBr = 0.50;  # liquid =============== #
 
     # Calculation of actual sig
     # and eps

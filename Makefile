@@ -7,7 +7,7 @@ TNK_DYNAMIC := dynamic
 
 CONFIGURE := ./configure.pl
 
-MOLNAMES     := c8 tf2
+MOLNAMES     := kaA kaB
 PKM_INPFILE  := packmol.inp
 GMX_ITPFILES := $(addsuffix .itp, $(MOLNAMES))
 GMX_TOPFILE  := topol.top

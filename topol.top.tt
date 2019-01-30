@@ -10,7 +10,6 @@
 ;nonbond_params section using
 ;   sigAB = 0.80 * sigAA
 ;   epsAB = 1.50 * epsAA
-;
 
 [ defaults ]
 ; nbfunc    comb-rule   gen-pairs   fudgeLJ fudgeQQ

@@ -32,6 +32,7 @@ else {
 my $vars = {
     project  => "$project",
     logfile  => "$logging_root/$project",
+    mdcode   => "gromacs" # [tinker|gromacs]
     atmnma   => "kaA",
     atmnmb   => "kaB",
     molnma   => "KAA",
@@ -45,6 +46,8 @@ my $vars = {
     sigbb    => '',
     epsbb    => '',
     tr       => 0.55,
+    ta       => $tr,
+    tb       => $tr,
     na       => 4000,
     nb       => 1000,
     dx       => 54.727,
@@ -73,7 +76,7 @@ system("echo 'Running scripts'");
 # 	tau, tau2, T, rho,
 # 	sigAA, epsAA, sigAB,
 #   epsAB, sigBB, epsBB
-sub kobandprms80to20 {
+sub koband4to1params {
     my $nm_to_m = 1.0e-09;
     my $kJ_to_J = 1.0e+03;
     my $s_to_ps = 1.0e+12;
@@ -135,7 +138,7 @@ sub kobandprms80to20 {
     return %params;
 }
 
-my %vals = kobandprms80to20(1, 2, 3, 4);
+my %vals = koband4to1params(1, 2, 3, 4);
 say("This is it:");
 say($vals{'epsBB'});
 

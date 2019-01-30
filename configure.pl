@@ -32,7 +32,7 @@ else {
 my $vars = {
     project  => "$project",
     logfile  => "$logging_root/$project",
-    mdcode   => "gromacs" # [tinker|gromacs]
+    mdcode   => "gromacs",
     atmnma   => "kaA",
     atmnmb   => "kaB",
     molnma   => "KAA",
@@ -46,8 +46,8 @@ my $vars = {
     sigbb    => '',
     epsbb    => '',
     tr       => 0.55,
-    ta       => $tr,
-    tb       => $tr,
+    ta       => 0.55,
+    tb       => 0.55,
     na       => 4000,
     nb       => 1000,
     dx       => 54.727,
@@ -69,13 +69,13 @@ foreach ( @ifiles ) {
 # Now run whatever needed on CLI
 system("echo 'Running scripts'");
 
-# Run in octave; put in ~/local/octavepath
-# Should take arguments:
-# 	m, sigAAp, epsAAp, Tr
-# Should return the following:
-# 	tau, tau2, T, rho,
-# 	sigAA, epsAA, sigAB,
-#   epsAB, sigBB, epsBB
+# :param: m         Mass
+# :param: sigAAp    Pre-run sigAA
+# :param: epsAAp    Pre-run epsAA
+# :param: Tr        Reduced temperature
+# :return: {tau, tau2, T, rho,
+#           sigAA, epsAA, sigAB,
+#           epsAB, sigBB, epsBB}
 sub koband4to1params {
     my $nm_to_m = 1.0e-09;
     my $kJ_to_J = 1.0e+03;

@@ -32,6 +32,10 @@ else {
 my $vars = {
     project  => "$project",
     logfile  => "$logging_root/$project",
+    atmnma   => "kaA",
+    atmnmb   => "kaB",
+    molnma   => "KAA",
+    molnmb   => "KAB",
     ma       => 0.039948,
     mb       => 0.039948,
     sigaa    => 0.340100,
@@ -66,11 +70,9 @@ system("echo 'Running scripts'");
 # Should take arguments:
 # 	m, sigAAp, epsAAp, Tr
 # Should return the following:
-# 	tau, tau2,
-# 	T, rho,
-# 	sigAA, epsAA,
-# 	sigAB, epsAB,
-# 	sigBB, epsBB
+# 	tau, tau2, T, rho,
+# 	sigAA, epsAA, sigAB,
+#   epsAB, sigBB, epsBB
 sub kobandprms80to20 {
     my $nm_to_m = 1.0e-09;
     my $kJ_to_J = 1.0e+03;
@@ -98,10 +100,10 @@ sub kobandprms80to20 {
     # Store ratios of each variable
     # relative to the corresponding
     # AA Lennard-Jones values
-    my $sigABr = 0.80;
-    my $sigBBr = 0.88;
-    my $epsABr = 1.50;
-    my $epsBBr = 0.50;
+    my $sigABr = 0.80;  # These values are =====
+    my $sigBBr = 0.88;  # part of what defines =
+    my $epsABr = 1.50;  # the Kob-Andersen 80:20
+    my $epsBBr = 0.50;  # liquid ===============
 
     # Calculation of actual sig
     # and eps

@@ -7,23 +7,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "configure.pl",
-			"settings":
-			{
-				"buffer_size": 1063,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "README.rst",
-			"settings":
-			{
-				"buffer_size": 837,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -38,11 +21,7 @@
 		[
 			[
 				"Package Control: ",
-				"Package Control: Install Package"
-			],
-			[
-				"Install Package Control",
-				"Install Package Control"
+				"Package Control: Satisfy Dependencies"
 			],
 			[
 				"package",
@@ -64,15 +43,6 @@
 		"height": 150.0,
 		"history":
 		[
-			"print(os.environ['PATH'])",
-			"print(os.environ['HOME'])",
-			"print(os.environ)",
-			"print(os.environ['HOME'])",
-			"import os",
-			"import sys",
-			"import re",
-			"import",
-			"print('hello')",
 			"help",
 			"import help",
 			"info",
@@ -101,10 +71,8 @@
 	},
 	"file_history":
 	[
-		"/C/Users/User/Dropbox/work/koband/koband.sublime-project",
-		"/C/Users/User/Dropbox/safe/kbsafe/keys/scatter__ea5e-0105__10.1.0__0-2019.json",
-		"/C/Users/User/AppData/Roaming/Sublime Text 3/Packages/Git/Git.sublime-settings",
-		"/C/Users/User/Dropbox/work/koband/Makefile",
+		"/home/rpdaly/.local/mnt/rpdaly/Dropbox/work/koband/configure.pl",
+		"/home/rpdaly/.local/mnt/rpdaly/Dropbox/work/koband/Makefile",
 		"/home/rpdaly/.local/mnt/rpdaly/Dropbox/work/koband/koband.sublime-project",
 		"/home/rpdaly/.config/sublime-text-3/Packages/User/Git.sublime-settings",
 		"/home/rpdaly/.config/sublime-text-3/Packages/Git/Git.sublime-settings",
@@ -147,70 +115,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "configure.pl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1063,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								955,
-								957
-							]
-						],
-						"settings":
-						{
-							"rulers":
-							[
-							],
-							"syntax": "Packages/Perl/Perl.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 439.2,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "README.rst",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 837,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								797,
-								797
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/RestructuredText Improved/reStructuredText Improved.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 270.4,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				}
 			]
 		}
 	],

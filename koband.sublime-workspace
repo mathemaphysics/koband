@@ -11,25 +11,7 @@
 			"file": "configure.pl",
 			"settings":
 			{
-				"buffer_size": 3440,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "topol.top.tt",
-			"settings":
-			{
-				"buffer_size": 1338,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "step.mdp.tt",
-			"settings":
-			{
-				"buffer_size": 1967,
+				"buffer_size": 3460,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -38,7 +20,24 @@
 			"file": "Makefile",
 			"settings":
 			{
-				"buffer_size": 758,
+				"buffer_size": 911,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "topol.top.tt",
+			"settings":
+			{
+				"buffer_size": 1336,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "step.mdp.tt",
+			"settings":
+			{
+				"buffer_size": 1967,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -122,6 +121,22 @@
 		"height": 150.0,
 		"history":
 		[
+			"help(os)",
+			"os.help",
+			"os.ls",
+			"os.dir()",
+			"os.dir",
+			"os",
+			"os.list",
+			"ls",
+			"argparse.Parser",
+			"arsparse.Argparser()",
+			"import argparse",
+			"sys.stderr",
+			"import sys",
+			"ls",
+			"sl",
+			"!ls",
 			"os.environ",
 			"os.environ['HOME']",
 			"import os",
@@ -164,10 +179,13 @@
 	},
 	"file_history":
 	[
+		"/C/Users/User/AppData/Roaming/Sublime Text 3/Packages/CMakeEditor/README.md",
+		"/C/Users/User/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/User/AppData/Roaming/Sublime Text 3/Packages/SublimeTensorflow/Default (Windows).sublime-keymap",
+		"/C/Users/User/Dropbox/work/koband/koband.sublime-project",
 		"/C/Users/User/AppData/Roaming/Sublime Text 3/Packages/CMakeEditor/Default.sublime-keymap",
 		"/C/Users/User/Dropbox/work/koband/README.rst",
 		"/C/Users/User/Dropbox/work/koband/01_confout.pdb",
-		"/C/Users/User/Dropbox/work/koband/koband.sublime-project",
 		"/C/Users/User/Dropbox/safe/kbsafe/keys/scatter__ea5e-0105__10.1.0__0-2019.json",
 		"/C/Users/User/AppData/Roaming/Sublime Text 3/Packages/Git/Git.sublime-settings",
 		"/C/Users/User/Dropbox/work/koband/Makefile",
@@ -213,7 +231,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -222,15 +240,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3440,
+						"buffer_size": 3460,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2474,
-								2474
+								3153,
+								3154
 							]
 						],
 						"settings":
@@ -243,35 +261,35 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1728.0,
+						"translation.y": 1944.8,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "topol.top.tt",
+					"file": "Makefile",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1338,
+						"buffer_size": 911,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								400,
-								400
+								700,
+								700
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/Makefile/Makefile.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 648.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -279,6 +297,34 @@
 				},
 				{
 					"buffer": 2,
+					"file": "topol.top.tt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1336,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								650,
+								650
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 162.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
 					"file": "step.mdp.tt",
 					"semi_transient": false,
 					"settings":
@@ -290,8 +336,8 @@
 						"selection":
 						[
 							[
-								309,
-								309
+								507,
+								507
 							]
 						],
 						"settings":
@@ -302,35 +348,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Makefile",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 758,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								628,
-								628
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Makefile/Makefile.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 432.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -346,8 +364,8 @@
 						"selection":
 						[
 							[
-								114,
-								114
+								41,
+								41
 							]
 						],
 						"settings":
@@ -358,7 +376,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -414,7 +432,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -430,8 +448,8 @@
 						"selection":
 						[
 							[
-								798,
-								798
+								222,
+								222
 							]
 						],
 						"settings":
@@ -440,7 +458,7 @@
 							"syntax": "Packages/RestructuredText Improved/reStructuredText Improved.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 216.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 7,
@@ -480,6 +498,14 @@
 		]
 	},
 	"menu_visible": true,
+	"output.CMakeEditor":
+	{
+		"height": 127.0
+	},
+	"output.exec":
+	{
+		"height": 127.0
+	},
 	"output.find_results":
 	{
 		"height": 0.0
@@ -510,12 +536,16 @@
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"",
+				"C:\\Users\\User\\Dropbox\\proj\\financial.category\\crypto\\crypto.sublime-project"
+			]
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{

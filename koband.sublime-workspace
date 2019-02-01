@@ -247,8 +247,8 @@
 						"selection":
 						[
 							[
-								3153,
-								3154
+								3034,
+								3034
 							]
 						],
 						"settings":
@@ -261,7 +261,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1944.8,
+						"translation.y": 2160.8,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -542,7 +542,7 @@
 		[
 			[
 				"",
-				"C:\\Users\\User\\Dropbox\\proj\\financial.category\\crypto\\crypto.sublime-project"
+				"C:\\Users\\User\\Dropbox\\proj\\deeplearn.category\\sklearn\\sklearn.sublime-project"
 			]
 		],
 		"width": 380.0

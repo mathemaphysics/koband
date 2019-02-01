@@ -31,6 +31,7 @@ else {
 #my @ifiles = ('config.txt.tt', 'packmol.inp.tt');
 my $vars = {
     project  => "$project",
+    sysname  => "KA",
     logfile  => "$logging_root/$project",
     mdcode   => "gromacs",
     atmnma   => "kaA",
@@ -66,21 +67,28 @@ foreach ( @ifiles ) {
         || die "Template process failed: ", $template->error(), "\n";
 }
 
-# Now run whatever needed on CLI
-system("echo 'Running scripts'");
+###############################################
+# Here lies the Kob-Andersen liquid parameter #
+# generator whose job was previously done by  #
+# an Octave/Matlab script.                    #
+#                                             #
+# :param: m         Mass                      #
+# :param: sigAAp    Pre-run sigAA             #
+# :param: epsAAp    Pre-run epsAA             #
+# :param: Tr        Reduced temperature       #
+# :return: {tau, tau2, T, rho,                #
+#           sigAA, epsAA, sigAB,              #
+#           epsAB, sigBB, epsBB}              #
+###############################################
 
-# :param: m         Mass
-# :param: sigAAp    Pre-run sigAA
-# :param: epsAAp    Pre-run epsAA
-# :param: Tr        Reduced temperature
-# :return: {tau, tau2, T, rho,
-#           sigAA, epsAA, sigAB,
-#           epsAB, sigBB, epsBB}
 sub koband4to1params {
+    # Unit conversion definitions
     my $nm_to_m = 1.0e-09;
     my $kJ_to_J = 1.0e+03;
     my $s_to_ps = 1.0e+12;
-    my $kb = 1.38064852e-23 * 6.0221409e23; # kg m^2 / s^2 / K * 1/mol = J / mol K
+
+    # kg m^2 / s^2 / K * 1/mol = J / mol K
+    my $kb = 1.38064852e-23 * 6.0221409e23;
 
     # Input variables
     my $m = $_[0];
@@ -138,7 +146,12 @@ sub koband4to1params {
 }
 
 my %vals = koband4to1params(1, 2, 3, 4);
-say("This is it:");
-say($vals{'epsBB'});
+
+###############################################
+# Access the result of the call to            #
+# koband4to1params() via $val{'varname'}      #
+###############################################
+
+
 
 # vim: tw=65:ts=4:sts=4:sw=4:et:sta

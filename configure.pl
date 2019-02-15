@@ -8,65 +8,6 @@ use Env;
 use Math::BigFloat ':constant';
 use Env qw(LOGGING_ROOT);
 
-# Put the input variables here
-my $project = "koband";
-my $logging_root = $LOGGING_ROOT;
-
-# Check for command line arguments
-my @ifiles;
-if ( scalar(@ARGV) > 0 ) {
-    my $i = 1;
-    say("Target files:");
-    foreach (@ARGV) {
-        say("$i: $_");
-        $i = $i + 1;
-    }
-    @ifiles = @ARGV;
-}
-else {
-    my @ifiles = ('config.txt.tt', 'packmol.inp.tt');
-}
-
-# Can do calculations inline now
-#my @ifiles = ('config.txt.tt', 'packmol.inp.tt');
-my $vars = {
-    project  => "$project",
-    sysname  => "KA",
-    logfile  => "$logging_root/$project",
-    mdcode   => "gromacs",
-    atmnma   => "kaA",
-    atmnmb   => "kaB",
-    molnma   => "KAA",
-    molnmb   => "KAB",
-    ma       => 0.039948,
-    mb       => 0.039948,
-    sigaa    => 0.340100,
-    epsaa    => 0.978638,
-    sigab    => '',
-    epsab    => '',
-    sigbb    => '',
-    epsbb    => '',
-    tr       => 0.55,
-    ta       => 0.55,
-    tb       => 0.55,
-    na       => 4000,
-    nb       => 1000,
-    dx       => 54.727,
-    pdba     => 'kaA.pdb',
-    pdbb     => 'kaB.pdb',
-};
-
-my $template = Template->new();
-
-foreach ( @ifiles ) {
-    my $ifile = $_;
-    s/.tt$//;
-    my $ofile = $_;
-    say $ifile, " => ", $ofile;
-    $template->process($ifile, $vars, $ofile)
-        || die "Template process failed: ", $template->error(), "\n";
-}
-
 ###############################################
 # Here lies the Kob-Andersen liquid parameter #
 # generator whose job was previously done by  #
@@ -134,24 +75,87 @@ sub koband4to1params {
     	'tau2' => $tau2,
     	'T' => $T,
     	'rho' => $rho,
-    	'sigAA' => $sigAA,
-    	'epsAA' => $epsAA,
-    	'sigAB' => $sigAB,
-    	'epsAB' => $epsAB,
-    	'sigBB' => $sigBB,
-    	'epsBB' => $epsBB
+    	'sigAA' => $sigAA / $nm_to_m,
+    	'epsAA' => $epsAA / $kJ_to_J,
+    	'sigAB' => $sigAB / $nm_to_m,
+    	'epsAB' => $epsAB / $kJ_to_J,
+    	'sigBB' => $sigBB / $nm_to_m,
+    	'epsBB' => $epsBB / $kJ_to_J
     );
 
     return %params;
 }
 
-my %vals = koband4to1params(1, 2, 3, 4);
+my %vals = koband4to1params(1, 0.34, 3, 4);
 
 ###############################################
 # Access the result of the call to            #
 # koband4to1params() via $val{'varname'}      #
 ###############################################
 
+# Put the input variables here
+my $project = "koband";
+my $logging_root = $LOGGING_ROOT;
 
+# Check for command line arguments
+my @ifiles;
+if ( scalar(@ARGV) > 0 ) {
+    my $i = 1;
+    say("Target files:");
+    foreach (@ARGV) {
+        say("$i: $_");
+        $i = $i + 1;
+    }
+    @ifiles = @ARGV;
+}
+else {
+    my @ifiles = ('config.txt.tt', 'packmol.inp.tt');
+}
+
+# Can do calculations inline now
+#my @ifiles = ('config.txt.tt', 'packmol.inp.tt');
+my $vars = {
+    project  => "$project",
+    sysname  => "KA",
+    logfile  => "$logging_root/$project",
+    mdcode   => "gromacs",
+    atmnma   => "kaA",
+    atmnmb   => "kaB",
+    molnma   => "KAA",
+    molnmb   => "KAB",
+    ma       => 0.039948,
+    mb       => 0.039948,
+    sigaa    => $vals{'sigAA'},
+    epsaa    => $vals{'epsAA'},
+    sigab    => $vals{'sigAB'},
+    epsab    => $vals{'epsAB'},
+    sigbb    => $vals{'sigBB'},
+    epsbb    => $vals{'epsBB'},
+    tr       => 0.55,
+    ta       => 0.55,
+    tb       => 0.55,
+    na       => 4000,
+    nb       => 1000,
+    dx       => 54.727,
+    pdba     => 'kaA.pdb',
+    pdbb     => 'kaB.pdb',
+};
+
+########################
+# Common AA parameters #
+# sigaa    => 0.340100 #
+# epsaa    => 0.978638 #
+########################
+
+my $template = Template->new();
+
+foreach ( @ifiles ) {
+    my $ifile = $_;
+    s/.tt$//;
+    my $ofile = $_;
+    say $ifile, " => ", $ofile;
+    $template->process($ifile, $vars, $ofile)
+        || die "Template process failed: ", $template->error(), "\n";
+}
 
 # vim: tw=65:ts=4:sts=4:sw=4:et:sta

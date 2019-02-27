@@ -25,6 +25,8 @@ CONFIGURE    := ./configure.pl
 ###############################################
 
 MOLNAMES     := kaA kaB
+PREFIX       := 01
+SUFFIX       := 001
 PKM_INPFILE  := packmol.inp
 GMX_ITPFILES := $(addsuffix .itp, $(MOLNAMES))
 GMX_TOPFILE  := topol.top

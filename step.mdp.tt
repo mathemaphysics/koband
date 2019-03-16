@@ -1,4 +1,4 @@
-title               = [% GET project -%]
+title               = [% GET project %]
 cpp                 = /lib/cpp
 define              =
 constraints         = none 
@@ -46,9 +46,9 @@ optimize_fft        = yes
 
 ; Nose-Hoover temperature coupling is on
 Tcoupl              = Nose-Hoover
-ref-t               = [% GET ta -%] [% GET tb -%]
+ref-t               = [% GET ta -%] [% GET tb %]
 tau-t               = 1.0 1.0
-tc-grps             = [% GET atmnma -%] [% GET atmnmb -%]
+tc-grps             = [% GET atmnma -%] [% GET atmnmb %]
 
 ; Energy monitoring
 energygrps			= kaA kaB

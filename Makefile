@@ -28,13 +28,14 @@ MOLNAMES     := kaA kaB
 PREFIX       := 01
 SUFFIX       := 001
 PKM_INPFILE  := packmol.inp
+PKM_TARGETS  := $(PKM_INPFILE)
 GMX_ITPFILES := $(addsuffix .itp, $(MOLNAMES))
 GMX_TOPFILE  := topol.top
-GMX_PTLFILES := $(ITPFILES) $(TOPFILE)
+GMX_PTLFILES := $(GMX_ITPFILES) $(GMX_TOPFILE)
 GMX_MDPFILE  := step.mdp
 GMX_CONFIN   := confin.gro
 GMX_TARGETS  := $(GMX_CONFIN) $(GMX_MDPFILE) \
-				$(GMX_PTLFILES) $(PKM_INPFILE)
+				$(GMX_PTLFILES)
 TNK_KEYFILE  := keyfile.key
 TNK_PRMFILE  := prmfile.prm
 TNK_PTLFILES := $(TNK_KEYFILE) $(TNK_PRMFILE)
@@ -50,10 +51,12 @@ endef
 %: %.tt
 	$(CONFIGURE) $<
 
-$(GMX_CONFIN): $(PKM_INPFILE)
+all: $(GMX_TARGETS)
+
+$(GMX_TARGETS): $(PKM_TARGETS)
 
 clean:
-	rm -rf $(PKM_TARGETS)
+	rm -rf $(GMX_TARGETS)
 
 check:
 	@echo "Parameters:"

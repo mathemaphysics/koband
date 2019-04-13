@@ -1,4 +1,7 @@
 cc_binary(
-	name = "",
-	srcs = [""],
+	name = "test",
+	srcs = [],
+	hdrs = [],
+	deps = [],
+	visibility = []
 )

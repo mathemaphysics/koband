@@ -56,7 +56,7 @@ all: $(GMX_TARGETS)
 $(GMX_TARGETS): $(PKM_TARGETS)
 
 clean:
-	rm -rf $(GMX_TARGETS)
+	rm -rf $(GMX_TARGETS) $(PKM_TARGETS)
 
 check:
 	@echo "Parameters:"

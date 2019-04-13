@@ -13,10 +13,10 @@ use Env qw(LOGGING_ROOT);
 # generator whose job was previously done by  #
 # an Octave/Matlab script.                    #
 #                                             #
-# :param: m         Mass                      #
-# :param: sigAAp    Pre-run sigAA             #
-# :param: epsAAp    Pre-run epsAA             #
-# :param: Tr        Reduced temperature       #
+# :param m:         Mass                      #
+# :param sigAAp:    Pre-run sigAA             #
+# :param epsAAp:    Pre-run epsAA             #
+# :param Tr:        Reduced temperature       #
 # :return: {tau, tau2, T, rho,                #
 #           sigAA, epsAA, sigAB,              #
 #           epsAB, sigBB, epsBB}              #

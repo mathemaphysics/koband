@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+cpp -I. ./topol.top | ./topsect -
+
+# vim: tw=65:ts=4:sw=4:sts=4:et:sta

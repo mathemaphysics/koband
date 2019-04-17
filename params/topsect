@@ -1,0 +1,488 @@
+#!/usr/bin/awk -f
+
+function grototnk_torsion(c)
+{
+    # This matrix is the Moore-Pensrose inverse of f -> c
+    # matrix transformation used to get the Fourier
+    # coefficients from the Ryckaert-Bellemans formula for
+    # dihedhral/torsion potential energy
+    u[1] = "0.70000  -1.30000   0.70000  -0.80000   0.70000  0.00000"
+    u[2] = "0.40000   0.40000  -0.60000   0.40000  -0.60000  0.00000"
+    u[3] = "0.10000   0.10000   0.10000  -0.40000   0.10000  0.00000"
+    u[4] = "0.05000   0.05000   0.05000   0.05000  -0.20000  0.00000"
+
+    # Make sure we all know that v is 2-integer tensor
+    P[1][0]; P[2][0]; P[3][0]; P[4][0];
+
+    # Now split the matrix in each u[i] into tensor in v
+    split(u[1],P[1]);
+    split(u[2],P[2]);
+    split(u[3],P[3]);
+    split(u[4],P[4]);
+
+    # Finally just convert to float to make sure no issues
+    # later when we'll have to use them to calculate
+    # potential torsion energy of real dihedrals
+    for(i=1;i<=4;i++)
+        for(j=1;j<=6;j++)
+            P[i][j] = P[i][j] + 0.0;
+
+    # Now just apply the matrix to the input vector given
+    for(i=1;i<=4;i++)
+    {
+        v[i] = 0.0; # Assuming we're starting from scratch
+        for(j=1;j<=6;j++)
+            v[i] = v[i] + P[i][j] * c[j];
+        #printf("v[%2d] = %10.3f\n",i,v[i]);
+    }
+    for(i=1;i<=4;i++)
+        v[i] = v[i] / 4.184;
+
+    # This function acts like an inline function which
+    # inherits all global variables, and donates all of its
+    # local variables to the top level scope; so there is no
+    # need to call `return` because `v` is already available
+    # to the main program
+}
+
+BEGIN{
+    state = 0;
+    molname = "";
+    exclude = 0;
+    section = "";
+    verbose = 1;
+
+    # TODO: Just save the partial charges in the [ atomtypes ]
+    # section in a list carrying the parameters.
+    vdwsig[1] = 1.0; # TODO: Fill this in from [ atomtypes ] section
+    vdweps[1] = 1.0; # TODO: Fill this in from [ atomtypes ] section
+    vdwchg[1] = 1.0; # TODO: Fill this in from [ atomtypes ] section
+    atmtps["null"][1] = 1; # atmtps["c8"][11] contains OPLS number of atom 11 in residue type "c8"
+    atmcls["null"][1] = 1; # atmcls["c8"][11] contains map of OPLS atom number (e.g. opls-956)
+    clsidx = 1;            # to classes for residue "c8"
+    # Class index counter is clsidx
+
+    # TODO: Rename these parameter variables to make them
+    # more reflective of what they actually are; make these
+    # standard in the same way as ISO
+
+    # Here lies important arrays for use below
+    atnum["H"]  =  1;  atnum["Mn"]  = 25;
+    atnum["He"] =  2;  atnum["Fe"]  = 26;
+    atnum["Li"] =  3;  atnum["Co"]  = 27;
+    atnum["Be"] =  4;  atnum["Ni"]  = 28;
+    atnum["B"]  =  5;  atnum["Cu"]  = 29;
+    atnum["C"]  =  6;  atnum["Zn"]  = 30;
+    atnum["N"]  =  7;  atnum["Ga"]  = 31;
+    atnum["O"]  =  8;  atnum["Ge"]  = 32;
+    atnum["F"]  =  9;  atnum["As"]  = 33;
+    atnum["Ne"] = 10;  atnum["Se"]  = 34;
+    atnum["Na"] = 11;  atnum["Br"]  = 35;
+    atnum["Mg"] = 12;  atnum["Kr"]  = 36;
+    atnum["Al"] = 13;  atnum["Rb"]  = 37;
+    atnum["Si"] = 14;  atnum["Sr"]  = 38;
+    atnum["P"]  = 15;  atnum["Y"]   = 39;
+    atnum["S"]  = 16;  atnum["Zr"]  = 40;
+    atnum["Cl"] = 17;  atnum["Nb"]  = 41;
+    atnum["Ar"] = 18;  atnum["Mo"]  = 42;
+    atnum["K"]  = 19;  atnum["Tc"]  = 43;
+    atnum["Ca"] = 20;  atnum["Ru"]  = 44;
+    atnum["Sc"] = 21;  atnum["Rh"]  = 45;
+    atnum["Ti"] = 22;  atnum["Pd"]  = 46;
+    atnum["V"]  = 23;  atnum["Ag"]  = 47;
+    atnum["Cr"] = 24;  atnum["Cd"]  = 48;
+
+    # Atomic valences (standard)
+    atval["H"]  =  1;  atval["Mn"]  = 0;
+    atval["He"] =  0;  atval["Fe"]  = 0;
+    atval["Li"] =  1;  atval["Co"]  = 0;
+    atval["Be"] =  2;  atval["Ni"]  = 0;
+    atval["B"]  =  3;  atval["Cu"]  = 0;
+    atval["C"]  =  4;  atval["Zn"]  = 0;
+    atval["N"]  =  3;  atval["Ga"]  = 0;
+    atval["O"]  =  2;  atval["Ge"]  = 0;
+    atval["F"]  =  1;  atval["As"]  = 0;
+    atval["Ne"] =  0;  atval["Se"]  = 0;
+    atval["Na"] =  0;  atval["Br"]  = 0; # <== TODO: At "Na"
+    atval["Mg"] =  0;  atval["Kr"]  = 0;
+    atval["Al"] =  0;  atval["Rb"]  = 0;
+    atval["Si"] =  0;  atval["Sr"]  = 0;
+    atval["P"]  =  0;  atval["Y"]   = 0;
+    atval["S"]  =  0;  atval["Zr"]  = 0;
+    atval["Cl"] =  0;  atval["Nb"]  = 0;
+    atval["Ar"] =  0;  atval["Mo"]  = 0;
+    atval["K"]  =  0;  atval["Tc"]  = 0;
+    atval["Ca"] =  0;  atval["Ru"]  = 0;
+    atval["Sc"] =  0;  atval["Rh"]  = 0;
+    atval["Ti"] =  0;  atval["Pd"]  = 0;
+    atval["V"]  =  0;  atval["Ag"]  = 0;
+    atval["Cr"] =  0;  atval["Cd"]  = 0;
+}
+
+/[[][ \t]*[a-z]+[ \t]*[]]/ {
+    # Do something here for every entry into
+    # a section in reading the GROMACS TOP
+    # file; also recreate an empty output
+    # file name to cat results into when
+    # the state == 0 on entering any section
+    # for the first time, i.e. meaning there
+    # will be output to come and will need
+    # to overwrite the file if it's already
+    # present (rather than appending to it
+    # using the ">>" operator as follows
+    # below
+    if( state == 0 )
+        printf("") > "output.prm";
+}
+
+/^[;#].*/ {
+    if( verbose > 0 )
+        printf( "(%4d)(%5s) Ignoring comment line\n",state,molname);
+    if( verbose > 1 )
+        printf("Comment line: %s\n",$0);
+    next;
+}
+
+/[[][ \t]*moleculetype[ \t]*[]]/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Entering a section: %s\n",state,molname,$2);
+    section = "moleculetype";
+    state = 1; /* Meaning we're inside moleculetype */
+    next;
+}
+
+/[[][ \t]*atoms[ \t]*[]]/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Entering a section: %s\n",state,molname,$2);
+    section = "atoms";
+    state = or(and(state,1),2); /* Get rid of previous bit set */
+    next;                       /* If bit 1 set, then keep it  */
+}
+
+/[[][ \t]*pairs[ \t]*[]]/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Entering a section: %s\n",state,molname,$2);
+    section = "pairs";
+    state = or(and(state,1),4);
+    next;
+}
+
+/[[][ \t]*bonds[ \t]*[]]/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Entering a section: %s\n",state,molname,$2);
+    section = "bonds";
+    state = or(and(state,1),8);
+    next;
+}
+
+/[[][ \t]*angles[ \t]*[]]/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Entering a section: %s\n",state,molname,$2);
+    section = "angles";
+    state = or(and(state,1),16);
+    next;
+}
+
+/[[][ \t]*dihedrals[ \t]*[]]/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Entering a section: %s\n",state,molname,$2);
+    section = "dihedrals";
+    state = or(and(state,1),32);
+    next;
+}
+
+/[[][ \t]*atomtypes[ \t]*[]]/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Entering a section: %s\n",state,molname,$2);
+    section = "atomtypes";
+    state = 64;
+    #atmtps[molname] = 1;
+    next;
+}
+
+state == 1 && $1 ~ /[a-zA-Z0-9]+/ && $2 ~ /[0-9]+/ {
+    molname = $1;
+    exclude = $2;
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Found exclusions of moleculetype: %d\n",state,molname,exclude);
+
+    next;
+}
+
+# [ atoms ]
+state == or(1,2) && NF >= 8 \
+      && $1 ~ /[0-9]+/ \
+      && $2 ~ /[-_a-zA-Z0-9]+/ \
+      && $3 ~ /[0-9]+/ \
+      && $4 ~ /[a-zA-Z0-9]+/ \
+      && $5 ~ /[a-zA-Z0-9]+/ \
+      && $6 ~ /[0-9]+/ \
+      && $7 ~ /[-]?[0-9]+(\.[0-9]+)?/ \
+      && $8 ~ /[0-9]+(\.[0-9]+)?/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Found a line from atoms: %d\n",state,molname,id);
+
+    # Index = $1, class = gensub(...,$2), resn = $4,
+    # atomname = $5, charge = $7, mass = $8
+    atomid = $1 + 0;
+    id = gensub(/opls[-_]([0-9]+)/,"\\1","g",$2) + 0;
+    atmtps[molname][atomid] = id;
+    resn = $4;
+    elem = gensub(/^[ \t]*([a-zA-Z]+)([0-9]*)/,"\\1","g",$5);
+    aname = elem;
+    amass = $8 + 0.0;
+    charge = $7 + 0.0;
+
+    sigma = vdwsig[id];
+    epsilon = vdweps[id];
+
+    # Need to assign valid atom classes; must be
+    # different for the same OPLS type number in
+    # each molecule, so need to keep track of them
+    atmcls[molname][atomid] = clsidx # For later
+    clsidx = clsidx + 1              # Next index to use
+
+    # Set the atom class to output for current atom
+    # Originally class was equal to "id", the OPLS
+    # atom type number; if GROMACS OPLS atom type is
+    # opls-956, then id was equal to 956; this is no
+    # longer the case
+    class = atmcls[molname][atomid]; # Saving for later
+
+    # TODO: Check to see if vdw{sig,eps,chg}[][] variables
+    # are set here already; if they are, then check the
+    # parameters here with those already loaded; otherwise
+    # just load them; output a warning either way to make
+    # sure the [ atomtypes ] and [ atoms ] sections are
+    # consistent
+
+    # Send partial charges of each atom to to a
+    # "charge" line in the Tinker PRM file format
+    # TODO: Just changed second argument to this string from
+    # "atomid" to "class" because we obviously can't number
+    # the both the cation atoms and the anion atoms starting
+    # with 1; so just give each atom the same atomid as it
+    # has for its class
+    printf("%-10s%7d%7d%5s%11s%10d%10.3f%5d\n","atom",class,class,aname,"\"" resn "\"",atnum[elem],amass,atval[elem]) >> "output.prm";
+    printf("%-10s%7d%10.3f\n","charge",class,charge) >> "output.prm";
+    printf("%-10s%7d%10.3f%10.3f\n","vdw",class,sigma,epsilon) >> "output.prm";
+
+    next;
+}
+
+# [ pairs ]
+state == or(1,4) {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Found a line from pairs: %5d%5d\n",state,molname,$1,$2);
+
+    # Is this even necessary? Probably for good measure.
+
+    next;
+}
+
+# [ bonds ]
+state == or(1,8) && NF >= 5 \
+    && $1 ~ /[0-9]+/ \
+    && $2 ~ /[0-9]+/ \
+    && $3 ~ /[0-9]+/ \
+    && $4 ~ /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $5 ~ /[-]?[0-9]+(\.[0-9]+)?/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Found a line from bonds: %5d%5d\n",state,molname,$1,$2);
+
+    # Do the conversion for bonds
+    ai = $1 + 0;
+    aj = $2 + 0;
+    fncidx = $3 + 0;
+    eqdist = ( $4 + 0.0 ) * 10.0;
+    fconst = ( $5 + 0.0 ) / ( 2 * 100 * 4.184 );
+
+    # Print lines for bonds to Tinker OPLSAA
+    printf("%-10s","bond") >> "output.prm";
+    if(molname in atmcls)
+    {
+        if(ai in atmcls[molname])
+            printf("%7d",atmcls[molname][ai]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+        if(aj in atmcls[molname])
+            printf("%7d",atmcls[molname][aj]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+    }
+    printf("%10.3f%10.3f\n",fconst,eqdist) >> "output.prm";
+
+    next;
+}
+
+# [ angles ]
+state == or(1,16) && NF >= 6 \
+    && $1 ~ /[0-9]+/ \
+    && $2 ~ /[0-9]+/ \
+    && $3 ~ /[0-9]+/ \
+    && $4 ~ /[0-9]+/ \
+    && $5 ~ /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $6 ~ /[-]?[0-9]+(\.[0-9]+)?/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Found a line from angles: %5d%5d\n",state,molname,$1,$2);
+
+    # Do the conversion for angles
+    ai = $1 + 0;
+    aj = $2 + 0;
+    ak = $3 + 0;
+    fncidx = $4 + 0;
+    eqang = ( $5 + 0.0 );
+    fconst = ( $6 + 0.0 ) / ( 2 * 4.184 );
+
+    # Print lines for angles to Tinker OPLSAA
+    printf("%-10s","angle") >> "output.prm";
+    if(molname in atmcls)
+    {
+        if(ai in atmcls[molname])
+            printf("%7d",atmcls[molname][ai]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+        if(aj in atmcls[molname])
+            printf("%7d",atmcls[molname][aj]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+        if(ak in atmcls[molname])
+            printf("%7d",atmcls[molname][ak]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+    }
+    printf("%11.4f%7.1f\n",fconst,eqang) >> "output.prm";
+
+    next;
+}
+
+# [ dihedrals ]
+state == or(1,32) && NF >= 11 \
+    && $1   ~   /[0-9]+/ \
+    && $2   ~   /[0-9]+/ \
+    && $3   ~   /[0-9]+/ \
+    && $4   ~   /[0-9]+/ \
+    && $5   ~   /[0-9]+/ \
+    && $6   ~   /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $7   ~   /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $8   ~   /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $9   ~   /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $(10) ~  /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $(11) ~  /[-]?[0-9]+(\.[0-9]+)?/ {
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Found a line from dihedrals: %5d%5d%5d%5d\n",state,molname,$1,$2,$3,$4);
+
+    # Do the conversion for dihedrals/torsions
+    ai = ( $1 + 0 );
+    aj = ( $2 + 0 );
+    ak = ( $3 + 0 );
+    al = ( $4 + 0 );
+    fcnidx = ( $5 + 0 );
+    delete c;
+    c[1] = ( $6 + 0.0 );
+    c[2] = ( $7 + 0.0 );
+    c[3] = ( $8 + 0.0 );
+    c[4] = ( $9 + 0.0 );
+    c[5] = ( $(10) + 0.0 );
+    c[6] = ( $(11) + 0.0 );
+    #v3 = -1.0 * ( c[4] / 2.0 / 4.184 );       # Need to evaluate
+    #v1 = ( -2.0 * c[2] / 4.184 ) + 3.0 * v3;  # v3 first for v1
+    #v2 = -1.0 * c[3] / 4.184;
+    v[1]; v[2]; v[3]; v[4];
+
+    # Write out torsion potential
+    printf("%-10s","torsion") >> "output.prm";
+    if(molname in atmcls)
+    {
+        if(ai in atmcls[molname])
+            printf("%7d",atmcls[molname][ai]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+        if(aj in atmcls[molname])
+            printf("%7d",atmcls[molname][aj]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+        if(ak in atmcls[molname])
+            printf("%7d",atmcls[molname][ak]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+        if(al in atmcls[molname])
+            printf("%7d",atmcls[molname][al]) >> "output.prm";
+        else
+            printf("%+7s","NA");
+    }
+    grototnk_torsion(c); # The new method
+    #if( sqrt(v[1]*v[1]) > 0.000001 )
+        printf("%15.9f%7.1f%5d",v[1],0.0,1) >> "output.prm";
+    #if( sqrt(v[2]*v[2]) > 0.000001 )
+        printf("%15.9f%7.1f%5d",v[2],180.0,2) >> "output.prm";
+    #if( sqrt(v[3]*v[3]) > 0.000001 )
+        printf("%15.9f%7.1f%5d",v[3],0.0,3) >> "output.prm";
+    #if( sqrt(v[4]*v[4]) > 0.000001 )
+        printf("%15.9f%7.1f%5d",v[4],180.0,4) >> "output.prm";
+    printf("\n") >> "output.prm";
+
+    next;
+}
+
+# [ atomtypes ]
+# IMPORTANT: The [ atomtypes ] section doesn't need to occur
+# within a [ moleculetype ] section, so we cannot save
+# information from reading [ atomtypes ] sections as if they
+# belong to a specific molecule declaration; an example of
+# this is the fact that vdw{chg,sig,eps}[id] is an array in
+# a single dimension instead of in two dimensions, one being
+# the molecule name, "molname", as done with other arrays in
+# this script; the VDW parameters should be identical for
+# all atoms of the same OPLS type given in the [ atomtypes ]
+# section
+state == 64 && NF >= 7 \
+    && $1 ~ /[-_a-zA-Z0-9]+/ \
+    && $2 ~ /[a-zA-Z0-9]+/ \
+    && $3 ~ /[0-9]+(\.[0-9]+)?/ \
+    && $4 ~ /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $5 ~ /[APS]/ \
+    && $6 ~ /[-]?[0-9]+(\.[0-9]+)?/ \
+    && $7 ~ /[-]?[0-9]+(\.[0-9]+)?/ {
+
+    # Do the conversion for atomtypes
+    id = gensub(/opls[-_]([0-9]+)/,"\\1","g",$1) + 0;
+    elem = gensub(/^[ \t]*([a-zA-Z]+)([0-9]*)/,"\\1","g",$5);
+    aname = elem;
+    amass = $3 + 0.0;
+    charge = $4 + 0.0;              # Put this info also
+    sigma = ( $6 + 0.0 ) * 10.0;    # in the arrays below
+    epsilon = ( $7 + 0.0 ) / 4.184; # and get rid of these
+
+    # TODO: Put all of the following information into the
+    # vdwsig[XXX], vdweps[XXX], and
+    # vdwchg[XXX]
+    vdwchg[id] = charge;   # Save this for
+    vdwsig[id] = sigma;    # later use in
+    vdweps[id] = epsilon;  # somewhere else
+
+    # Have some verbosity for fuck's sake
+    if( verbose > 0 )
+        printf("(%4d)(%5s) Found a line from atomtypes: %10.3f%10.3f\n",state,molname,sigma,epsilon);
+
+    # TODO: Two ways to do this:
+    #
+    # (1) The first way by assuming [ atomtypes ] section
+    # contains all atoms in the molecule and in the same
+    # order as they are in the [ atoms ] section
+    #
+    # (2) The second way is to search atmtps[molname] for all
+    # integers, cl, such that atmtps[molname][cl] = id (the
+    # XXX part of "opls-XXX"), and then take that list of
+    # atom indexes, cl, and get their atom classes from
+    # atmcls[molname] via atmcls[molname][cl] for each cl
+}
+
+END{
+    if( verbose > 0 )
+        printf("Finished conversion\n");
+    system("sed -nr -e '/^atom/w atoms.tmp' -e '/^atom/!w params.tmp' output.prm");
+    system("cat header.tmp atoms.tmp params.tmp >output.prm");
+}
+
+# vim: tw=60:ts=4:sw=4:sts=4:et:sta

@@ -28,13 +28,13 @@
 [% GET molnma -%]     3
 
 [ atoms ]
-    1   [% GET atmnma -%]   1   [% GET molnma -%]    [% GET atmnma -%]  1   0.000
+    1   [% GET atmnma -%]   1   [% GET molnma -%]    [% GET atmnma -%]  1   0.000	[% GET ma -%]
 
 [ moleculetype ]
 [% GET molnmb -%]     3
 
 [ atoms ]
-    1   [% GET atmnmb -%]   1   [% GET molnmb -%]    [% GET atmnmb -%]  1   0.000
+    1   [% GET atmnmb -%]   1   [% GET molnmb -%]    [% GET atmnmb -%]  1   0.000	[% GET mb -%]
 
 [ system ]
 KA

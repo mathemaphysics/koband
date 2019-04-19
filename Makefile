@@ -35,11 +35,13 @@ GMX_PTLFILES := $(GMX_ITPFILES) $(GMX_TOPFILE)
 GMX_MDPFILE  := step.mdp
 GMX_CONFIN   := confin.gro
 GMX_TARGETS  := $(GMX_CONFIN) $(GMX_MDPFILE) \
-				$(GMX_PTLFILES)
+		$(GMX_PTLFILES)
 TNK_KEYFILE  := keyfile.key
-TNK_PRMFILE  := prmfile.prm
+TNK_PRMFILE  := output.prm
+#TNK_PRMFILE  := prmfile.prm
 TNK_PTLFILES := $(TNK_KEYFILE) $(TNK_PRMFILE)
-TNK_TARGETS  := $(TNK_PTLFILES) $(PKM_INPFILE)
+TNK_TARGETS  := $(TNK_PRMFILE)
+#TNK_TARGETS  := $(TNK_PTLFILES) $(PKM_INPFILE)
 
 # Include macros here
 define script =
@@ -51,12 +53,15 @@ endef
 %: %.tt
 	$(CONFIGURE) $<
 
-all: $(GMX_TARGETS)
+all: $(GMX_TARGETS) $(TNK_TARGETS)
+
+output.prm: topol.top
+	./runtopsect
 
 $(GMX_TARGETS): $(PKM_TARGETS)
 
 clean:
-	rm -rf $(GMX_TARGETS) $(PKM_TARGETS)
+	rm -rf $(GMX_TARGETS) $(TNK_TARGETS) $(PKM_TARGETS)
 
 check:
 	@echo "Parameters:"

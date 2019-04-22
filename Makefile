@@ -42,7 +42,7 @@ TNK_PRMFILE  := output.prm
 #TNK_PRMFILE  := prmfile.prm
 TNK_PTLFILES := $(TNK_KEYFILE) $(TNK_PRMFILE)
 TNK_CONFIN   := confin.xyz
-TNK_TARGETS  := $(TNK_CONFIN) $(TNK_PRMFILE)
+TNK_TARGETS  := $(TNK_CONFIN) $(TNK_PTLFILES)
 #TNK_TARGETS  := $(TNK_PTLFILES) $(PKM_INPFILE)
 
 # Include macros here

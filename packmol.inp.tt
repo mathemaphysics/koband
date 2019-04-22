@@ -1,6 +1,6 @@
 
 tolerance 2.0
-output 01_confout.pdb
+output [% GET pdbout %]
 filetype pdb
 structure [% GET pdba %]
   resnumbers 3

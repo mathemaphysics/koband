@@ -143,6 +143,7 @@ my $vars = {
     dx       => 54.727,
     pdba     => 'kaA.pdb',
     pdbb     => 'kaB.pdb',
+    pdbout   => 'confin.pdb',
 };
 
 ########################

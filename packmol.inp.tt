@@ -5,10 +5,10 @@ filetype pdb
 structure [% GET pdba %]
   resnumbers 3
   number [% GET na %]
-  inside cube 0. 0. 0. [% GET dx %]
+  inside cube 0. 0. 0. [% dx * 10.0 %]
 end structure
 structure [% GET pdbb %]
   resnumbers 3
   number [% GET nb %]
-  inside cube 0. 0. 0. [% GET dx %]
+  inside cube 0. 0. 0. [% dx * 10.0 %]
 end structure

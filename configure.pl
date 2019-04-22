@@ -71,10 +71,10 @@ sub koband4to1params {
 
     # Returning results as a hash
     my %params = (
-    	'tau'  => $tau,
-    	'tau2' => $tau2,
-    	'T' => $T,
-    	'rho' => $rho,
+    	'tau'   => $tau,
+    	'tau2'  => $tau2,
+    	'T'     => $T,
+    	'rho'   => $rho,
     	'sigAA' => $sigAA / $nm_to_m,
     	'epsAA' => $epsAA / $kJ_to_J,
     	'sigAB' => $sigAB / $nm_to_m,
@@ -86,7 +86,7 @@ sub koband4to1params {
     return %params;
 }
 
-my %vals = koband4to1params(1, 0.34, 3, 4);
+my %vals = koband4to1params(39.948, 0.34, 3, 4);
 
 ###############################################
 # Access the result of the call to            #
@@ -140,7 +140,9 @@ my $vars = {
     tb       => 0.55,
     na       => 4000,
     nb       => 1000,
-    dx       => 54.727,
+    rho      => $vals{'rho'},
+    vol      => (4000.0 + 1000.0) / $vals{'rho'},
+    dx       => ((4000.0 + 1000.0) / $vals{'rho'})**(1/3),
     pdba     => 'kaA.pdb',
     pdbb     => 'kaB.pdb',
     pdbout   => 'confin.pdb',

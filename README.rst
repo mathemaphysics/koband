@@ -1,6 +1,31 @@
-==================================
-Parameters for Kob-Andersen System
-==================================
+==============================
+Generate a Kob-Andersen System
+==============================
+
+Introduction
+============
+
+This is a set of scripts and compiled code for
+generating a input files for a Kob-Andersen system
+in three dimensions in a number of different molecular
+dynamics codes. The primary MD codes are GROMACS and
+Tinker.
+
+The Kob-Andersen liquid is a simple atomic liquid which
+is commonly used in the field of condensed matter physics
+for studying glassy liquid behavior. It is a liquid
+which displays a structural glass transition around T = 0.45
+(in reduced temperature units).
+
+There are two atom types within the model, type A and type B.
+In the 80:20 KA liquid, there are 4 times as many A as B.
+Type A is larger in Vanderwaals radius than B. However, the
+A-B pair Vanderwaals energy of interaction, :math:`\epsilon_{AB}`,
+is greater than that of either A-A or B-B. It is partially for
+this reason that the system is glassy.
+
+Details
+=======
 
 The following are the input parameters used for
 this simulation of the Kob-Andersen liquid.

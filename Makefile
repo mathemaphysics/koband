@@ -46,7 +46,12 @@ TNK_TARGETS  := $(TNK_CONFIN) $(TNK_PTLFILES)
 #TNK_TARGETS  := $(TNK_PTLFILES) $(PKM_INPFILE)
 
 # Include macros here
-define header =
+define newline
+
+
+endef
+
+define TNK_PRMHEADER =
 
 ##############################
 # This Tinker parameter file #
@@ -67,12 +72,15 @@ chg-14-scale     2.0
 
 endef
 
-.PHONY: check clean
+.PHONY: check clean header
 
 %: %.tt
 	$(CONFIGURE) $<
 
 all: $(GMX_TARGETS) $(TNK_TARGETS)
+
+header.tmp:
+	@echo '$(subst $(newline),\n,${TNK_PRMHEADER})' >$@
 
 output.prm: topol.top
 	./runtopsect
@@ -86,12 +94,14 @@ $(TNK_CONFIN): confin.pdb
 $(GMX_CONFIN): confin.pdb
 	$(OPENBABEL) -ipdb $< -ogro $@
 
+$(TNK_PRMFILE): header.tmp
+
 $(GMX_TARGETS): $(PKM_TARGETS)
 
 $(TNK_TARGETS): $(PKM_TARGETS)
 
 clean:
-	rm -rf $(GMX_TARGETS) $(TNK_TARGETS) $(PKM_TARGETS) confin.pdb
+	rm -rf $(GMX_TARGETS) $(TNK_TARGETS) $(PKM_TARGETS) confin.pdb header.tmp
 
 check:
 	@echo "Parameters:"
@@ -99,5 +109,6 @@ check:
 	@echo $(GMX_TARGETS)
 	@echo "Tinker Targes:"
 	@echo $(TNK_TARGETS)
+
 
 # vim: tw=65:ts=4:sts=4:sw=4:sta

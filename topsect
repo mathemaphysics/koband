@@ -484,6 +484,7 @@ END{
         printf("Finished conversion\n");
     system("sed -nr -e '/^atom/w atoms.tmp' -e '/^atom/!w params.tmp' output.prm");
     system("cat header.tmp atoms.tmp params.tmp >output.prm");
+    system("rm atoms.tmp params.tmp");
 }
 
 # vim: tw=60:ts=4:sw=4:sts=4:et:sta

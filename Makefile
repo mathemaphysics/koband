@@ -101,7 +101,7 @@ $(GMX_TARGETS): $(PKM_TARGETS)
 $(TNK_TARGETS): $(PKM_TARGETS)
 
 clean:
-	rm -rf $(GMX_TARGETS) $(TNK_TARGETS) $(PKM_TARGETS) confin.pdb header.tmp
+	rm -rf output.log $(GMX_TARGETS) $(TNK_TARGETS) $(PKM_TARGETS) confin.pdb header.tmp
 
 check:
 	@echo "Parameters:"

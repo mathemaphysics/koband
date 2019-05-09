@@ -114,8 +114,8 @@ else {
 
 # Can do calculations inline now
 #my @ifiles = ('config.txt.tt', 'packmol.inp.tt');
-my na_init = 6400.0
-my nb_init = 1600.0
+my $na_init = 6400.0;
+my $nb_init = 1600.0;
 my $vars = {
     project  => "$project",
     sysname  => "KA",
@@ -144,7 +144,7 @@ my $vars = {
     nb       => $nb_init,
     rho      => $vals{'rho'},
     vol      => ($na_init + $nb_init) / $vals{'rho'},
-    dx       => ($na_init + $nb_init) / $vals{'rho'})**(1/3),
+    dx       => (($na_init + $nb_init) / $vals{'rho'})**(1/3),
     pdba     => 'kaA.pdb',
     pdbb     => 'kaB.pdb',
     pdbout   => 'confin.pdb',

@@ -108,7 +108,7 @@ check:
 	@echo "Parameters:"
 	@echo "Gromacs Targets:"
 	@echo $(GMX_TARGETS)
-	@echo "Tinker Targes:"
+	@echo "Tinker Targets:"
 	@echo $(TNK_TARGETS)
 
 

@@ -86,7 +86,7 @@ sub koband4to1params {
     return %params;
 }
 
-my %vals = koband4to1params(39.948, 0.34, 3, 4);
+my %vals = koband4to1params(39.948, 2.99288e-01, 9.78638e-1, 1.0);
 
 ###############################################
 # Access the result of the call to            #

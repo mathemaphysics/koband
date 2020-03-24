@@ -25,25 +25,26 @@ CONFIGURE    := ./configure.pl
 # respectively.                               #
 ###############################################
 
-MOLNAMES     := kaA kaB
-PREFIX       := 01
-SUFFIX       := 001
-PKM_INPFILE  := packmol.inp
-PKM_TARGETS  := $(PKM_INPFILE)
-GMX_ITPFILES := $(addsuffix .itp, $(MOLNAMES))
-GMX_TOPFILE  := topol.top
-GMX_PTLFILES := $(GMX_ITPFILES) $(GMX_TOPFILE)
-GMX_MDPFILE  := step.mdp
-GMX_CONFIN   := confin.gro
-GMX_TARGETS  := $(GMX_CONFIN) $(GMX_MDPFILE) \
-		$(GMX_PTLFILES)
-TNK_KEYFILE  := keyfile.key
-TNK_PRMFILE  := output.prm
-#TNK_PRMFILE  := prmfile.prm
-TNK_PTLFILES := $(TNK_KEYFILE) $(TNK_PRMFILE)
-TNK_CONFIN   := confin.xyz
-TNK_TARGETS  := $(TNK_CONFIN) $(TNK_PTLFILES)
-#TNK_TARGETS  := $(TNK_PTLFILES) $(PKM_INPFILE)
+MOLNAMES		:= kaA kaB
+PREFIX			:= 01
+SUFFIX			:= 001
+PKM_INPFILE		:= packmol.inp
+PKM_TARGETS		:= $(PKM_INPFILE)
+GMX_ITPFILES	:= $(addsuffix .itp, $(MOLNAMES))
+GMX_TOPFILE		:= topol.top
+GMX_PTLFILES	:= $(GMX_ITPFILES) $(GMX_TOPFILE)
+GMX_MDPFILE		:= step.mdp
+GMX_CONFIN		:= confin.gro
+GMX_CONFIN_BOX	:= confin-box.gro
+GMX_TARGETS		:= $(GMX_CONFIN) $(GMX_MDPFILE) \
+					$(GMX_PTLFILES) $(GMX_CONFIN_BOX)
+TNK_KEYFILE		:= keyfile.key
+TNK_PRMFILE		:= output.prm
+#TNK_PRMFILE	:= prmfile.prm
+TNK_PTLFILES	:= $(TNK_KEYFILE) $(TNK_PRMFILE)
+TNK_CONFIN		:= confin.xyz
+TNK_TARGETS		:= $(TNK_CONFIN) $(TNK_PTLFILES)
+#TNK_TARGETS	:= $(TNK_PTLFILES) $(PKM_INPFILE)
 
 # Include macros here
 define newline
@@ -95,6 +96,9 @@ $(TNK_CONFIN): confin.pdb
 $(GMX_CONFIN): confin.pdb
 	$(OPENBABEL) -ipdb $< -ogro $@
 
+$(GMX_CONFIN_BOX): confin.gro fixbox
+	bash ./fixbox
+
 $(TNK_PRMFILE): header.tmp
 
 $(GMX_TARGETS): $(PKM_TARGETS)
@@ -102,7 +106,7 @@ $(GMX_TARGETS): $(PKM_TARGETS)
 $(TNK_TARGETS): $(PKM_TARGETS)
 
 clean:
-	rm -rf output.log $(GMX_TARGETS) $(TNK_TARGETS) $(PKM_TARGETS) confin.pdb header.tmp confin.xyz.temp
+	rm -rf output.log $(GMX_TARGETS) $(TNK_TARGETS) $(PKM_TARGETS) confin.pdb header.tmp confin.xyz.temp fixbox
 
 check:
 	@echo "Parameters:"

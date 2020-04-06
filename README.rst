@@ -53,4 +53,46 @@ system are independent. For example,
 result of the fact that each of these depends on
 available space.
 
+Notes on Files
+==============
+
+The file names are intended to serve as a guide
+for what they do, I hope. The MDP files are for
+different purposes each. The file `step-min.mdp`
+is generated for minimization. So use it to do
+a minimization after the initial `packmol` system
+is generated. It is important to note that you
+**still need to do this minimization with the
+target software since packmol doesn't use the
+same potential**. You can end up blowing up your
+simulation if you dive right in with the file
+straight from `packmol`, i.e. `confin-box.gro`.
+The MDP file `step-pre.mdp` will set up a run
+for a small fraction of the total time of the
+full simulation in the constant energy ensemble
+in order to smooth things out before runnin at
+the target temperature. Finally, there's the
+full run MDP file `step-run.mdp`, which will
+set generate random velocities initially, as
+needed by the isoconfigurational (IC) ensemble,
+and will proceed to run for the allotted time
+using the velocity rescaling method for running
+canonical ensemble simulation.
+
+At this point there are also two different files
+to feed to `packmol`. The originally named file,
+`packmol.inp` will center the system's origin
+at the positional coordinates (0, 0, 0) nm. In
+addition, there's a file named `packmol-pos.inp`
+which places the bottom lower lefthand corner
+of the system cube at (0, 0, 0) nm instead. You
+can choose which of these is used by editing the
+`Makefile` to set `PKG_INPFILE`. The default at
+this point is `packmol-pos.inp`, since it is
+what is expected in general by GROMACS. However
+the downside of this is that TINKER is generally
+unhappy with this setup. So I recommend using the
+original `packmol.inp` file for simulations for
+which you want to use TINKER.
+
 .. vim: tw=55:ts=4:sts=4:sw=4:et:sta

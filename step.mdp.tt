@@ -19,9 +19,9 @@ emtol               = 1.0
 
 ; Periodic boundary conditions
 pbc                 = xyz
-rlist               = 0.74
-rcoulomb            = 0.74
-rvdw                = 0.74
+rlist               = 1.5
+rcoulomb            = 1.5
+rvdw                = 1.5
 rcoulomb-switch     = 1.0
 rvdw-switch         = 1.0
 

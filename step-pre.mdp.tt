@@ -1,0 +1,55 @@
+define              =
+integrator          = md
+dt                  = 0.001
+nsteps              = 5000
+nstcomm             = 100
+nstxout             = 20
+nstvout             = 20
+nstxout-compressed  = 0
+nstfout             = 0
+nstlog              = 100
+nstenergy           = 100
+nstcalcenergy       = 100
+nstlist             = 10
+ns_type             = grid
+
+; Energy minimization
+emstep              = 0.01
+emtol               = 1.0
+
+; Periodic boundary conditions
+pbc                 = xyz
+rlist               = 1.5
+rcoulomb            = 1.5
+rvdw                = 1.5
+rcoulomb-switch     = 1.0
+rvdw-switch         = 1.0
+
+cutoff-scheme       = Verlet
+vdw-type           = Cut-off
+
+DispCorr            = EnerPres
+
+; Nose-Hoover temperature coupling is on
+Tcoupl              = Nose-Hoover
+ref-t               = [% GET tta -%] [% GET ttb %]
+tau-t               = 1.0 1.0
+tc-grps             = [% GET atmtypa -%] [% GET atmtypb %]
+
+; Energy monitoring
+;energygrps          = [% GET atmtypa -%] [% GET atmtypb %]
+energygrps          = system
+Pcoupl              = no
+Pcoupltype          = isotropic
+ref-p               = 1.0
+tau-p               = 1.0
+compressibility     = 4.5e-5
+
+; Generate velocities
+gen_vel             = yes
+gen_temp            = [% GET tta %]
+gen_seed            = [% GET seed %]
+
+constraints         = none
+
+

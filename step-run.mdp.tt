@@ -1,7 +1,7 @@
 define              =
 integrator          = md
 dt                  = 0.001
-nsteps              = 5000000
+nsteps              = 100000
 nstcomm             = 100
 nstxout             = 20
 nstvout             = 20

@@ -31,7 +31,7 @@ vdw-type           = Cut-off
 DispCorr            = EnerPres
 
 ; Nose-Hoover temperature coupling is on
-Tcoupl              = Nose-Hoover
+Tcoupl              = no ;berendsen
 ref-t               = [% GET tta -%] [% GET ttb %]
 tau-t               = 1.0 1.0
 tc-grps             = [% GET atmtypa -%] [% GET atmtypb %]

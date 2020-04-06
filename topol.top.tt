@@ -22,19 +22,19 @@
 
 [ nonbond_params ]
 ;   i     j  func        sigma       epsilon
-  [% GET atmnma -%]   [% GET atmnmb -%]     1  [% GET sigab -%]   [% GET epsab -%]
+  [% GET atmnma -%]   [% GET atmnmb -%]     1  [% GET sigab -%]   [% GET epsab %]
 
 [ moleculetype ]
 [% GET molnma -%]     3
 
 [ atoms ]
-    1   [% GET atmnma -%]   1   [% GET molnma -%]    [% GET atmtypa -%]  1   0.000	[% GET ma -%]
+    1   [% GET atmnma -%]   1   [% GET molnma -%]    [% GET atmtypa -%]  1   0.000	[% GET ma %]
 
 [ moleculetype ]
 [% GET molnmb -%]     3
 
 [ atoms ]
-    1   [% GET atmnmb -%]   1   [% GET molnmb -%]    [% GET atmtypb -%]  1   0.000	[% GET mb -%]
+    1   [% GET atmnmb -%]   1   [% GET molnmb -%]    [% GET atmtypb -%]  1   0.000	[% GET mb %]
 
 [ system ]
 KA

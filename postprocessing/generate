@@ -1,0 +1,63 @@
+#!/bin/bash
+
+num_inst=30
+start_index=21
+
+if [ $# -gt 0 ]
+then
+    if [ $# -lt 2 ]
+    then
+        echo "${0}: Two arguments required: [start] [stop]"
+        exit 1
+    else
+        num_inst="${2}"
+        start_index="${1}"
+    fi
+fi
+
+interim_time=100
+
+get_cpu_temp () {
+    tot=0
+    count=0
+    for x in $(sensors | sed -nr 's/.*\+([0-9]+\.[0-9])°C\s+[(].*[)].*/\1/1p')
+    do
+        tot=$(bc <<< "${tot} + ${x}")
+        count=$((count+1))
+    done
+    tot=$(bc -l <<< "${tot} / ${count}")
+
+    echo "${tot}" | sed -r 's/\.[0-9]+//g'
+}
+
+get_gpu_temp () {
+    nvidia-smi --query-gpu=temperature.gpu --format=csv,nounits | sed -n 2p 
+}
+
+value_cpu=$(get_cpu_temp)
+value_gpu=$(get_gpu_temp)
+echo ${value_cpu}
+echo ${value_gpu}
+
+for x in $(seq ${start_index} ${num_inst})
+do
+    folder_name="$(printf "%03d" ${x})"
+    if [ ! -d ${folder_name} ]
+    then
+        echo "Setting up ${folder_name}"
+        mkdir ${folder_name}
+        pushd ${folder_name}
+        cp ../koband/confout.gro .
+        cp ../koband/step-run.mdp .
+        cp ../koband/topol.top .
+        sed -i -re '/^gen_seed\s+=\s+.*/s/[0-9]+/'${RANDOM}'/g' step-run.mdp
+        gmx grompp -c confout.gro -p topol.top -f step-run.mdp -maxwarn 2
+        gmx mdrun -nt 4
+        ln -s ../genmsd .
+        cp ../koband/index.ndx .
+        echo KAA_kaA_{1..6400} | gmx msd -n index.ndx -ngroup 6400 -o msd-all.xvg
+        popd
+        sleep ${interim_time}
+    fi
+done
+

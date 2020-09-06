@@ -86,7 +86,9 @@ sub koband4to1params {
     return %params;
 }
 
-my %vals = koband4to1params(39.948, 2.99288e-01, 9.78638e-1, 1.0);
+my %vals = koband4to1params(39.948, 2.99288e-01, 9.78638e-1, 0.60);
+say "Time unit 1: $vals{'tau'}";
+say "Time unit 2: $vals{'tau2'}";
 
 ###############################################
 # Access the result of the call to            #
@@ -139,9 +141,9 @@ my $vars = {
     epsbb    => $vals{'epsBB'},
     za       => 0.00,
     zb       => 0.00,
-    tr       => 0.55,
-    ta       => 0.55,
-    tb       => 0.55,
+    tr       => 0.80,
+    ta       => 0.80,
+    tb       => 0.80,
     tta      => sprintf("%8.3f", $vals{'T'}),
     ttb      => sprintf("%8.3f", $vals{'T'}),
     na       => $na_init,

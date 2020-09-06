@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo KAA_kaA_{1..6400} | gmx msd -n index.ndx -ngroup 6400 -o msd-all.xvg
+
+#minidx=1
+#maxidx=1
+#
+#if [ $# -ge 2 ]
+#then
+#    minidx=${1}
+#    maxidx=${2}
+#elif [ $# -ge 1 ]
+#then
+#    maxidx=${1}
+#fi
+#
+#echo "Running atoms ${minidx} -> ${maxidx}"
+#
+#if [ -f index.ndx ]
+#then
+#    echo "Found index.ndx. Continuing."
+#
+#    for idx in $(seq ${minidx} ${maxidx})
+#    do
+#        echo ${idx} | gmx msd -n index.ndx -o msd-$(printf "%04d" ${idx})
+#    done
+#else
+#    echo "Missing index.ndx. Exiting."
+#fi

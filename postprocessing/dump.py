@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # coding: utf-8
 import os
 import pathlib as pl
@@ -8,6 +9,7 @@ plist = pl.Path('.').glob('???')
 total = np.zeros((5001, 6400), dtype=np.float)
 
 n = 0
+print('Starting to load')
 for p in plist:
     ps = pl.Path(str(p) + '.npy')
     if not ps.exists():

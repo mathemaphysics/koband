@@ -30,7 +30,7 @@ tst = int(tps / 0.02)
 if tst < 0 or tst > maxidx:
     exit('Time outside of bounds.')
 
-p = Path('total-%5.2fps.txt' % tps)
+p = Path('total-%05.2fps.txt' % tps)
 if not args.quiet:
     if p.exists():
         okay = input('Warning: File %s already exists! Continue? (y/n): ' % str(p))

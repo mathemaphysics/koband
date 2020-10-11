@@ -86,7 +86,7 @@ sub koband4to1params {
     return %params;
 }
 
-my %vals = koband4to1params(39.948, 2.99288e-01, 9.78638e-1, 0.60);
+my %vals = koband4to1params(39.948, 2.99288e-01, 9.78638e-1, 1.0);
 say "Time unit 1: $vals{'tau'}";
 say "Time unit 2: $vals{'tau2'}";
 

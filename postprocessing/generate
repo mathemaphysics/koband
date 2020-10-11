@@ -15,7 +15,7 @@ then
     fi
 fi
 
-interim_time=100
+interim_time=60
 
 get_cpu_temp () {
     tot=0

@@ -4,13 +4,25 @@ import pymol
 import re
 import math
 import numpy as np
+from argparse import ArgumentParser
+
+parser = ArgumentParser(
+            description='Generate text files for input to razulplot.py'
+        )
+parser.add_argument(
+            'time',
+            type=float,
+            default=10.0,
+            help='The time in picoseconds'
+        )
+args = parser.parse_args()
 
 rmin=0.034; # Originally 0.034
 rmax=1.9; # Originally 1.7
 
 ffn = "confout.gro"
 
-fvals = list(enumerate(np.loadtxt('total-10.00ps.txt')))
+fvals = list(enumerate(np.loadtxt('total-%05.2fps.txt' % args.time)))
 fvals.sort(key=lambda m: m[1])
 indexl = np.array(fvals)[:, 0].astype(np.int)
 for i in range(len(indexl)):

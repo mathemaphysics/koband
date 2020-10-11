@@ -108,6 +108,10 @@ $(TNK_TARGETS): $(PKM_TARGETS)
 clean:
 	rm -rf output.log $(GMX_TARGETS) $(TNK_TARGETS) $(PKM_TARGETS) confin.pdb header.tmp confin.xyz.temp fixbox
 
+very-clean:
+	make clean
+	rm -f out.log topol.tpr traj.trr mdout.mdp md.log ener.edr confout.gro state.cpt state_prev.cpt \#*
+
 check:
 	@echo "Parameters:"
 	@echo "Gromacs Targets:"

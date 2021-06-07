@@ -14,8 +14,8 @@ RUN cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DGMX_GPU=ON -DGMX_CUDA_TARGET_CO
     && make && make install
 
 # Get and build Tinker-8.7.1
-ADD https://dasher.wustl.edu/tinker/downloads/tinker-8.7.1.tar.gz .
 #COPY tinker-8.7.1.tar.gz ./
+ADD https://dasher.wustl.edu/tinker/downloads/tinker-8.7.1.tar.gz .
 RUN tar xvf tinker-8.7.1.tar.gz
 WORKDIR tinker
 ENV TINKERDIR /workspace/build/tinker
@@ -31,7 +31,8 @@ ENV PATH=${PATH}:/workspace/build/tinker/source
 WORKDIR ../..
 
 # Install Packmol
-COPY packmol.tar.gz ./
+#COPY packmol.tar.gz ./
+ADD http://leandro.iqm.unicamp.br/m3g/packmol/packmol.tar.gz .
 RUN tar xvf packmol.tar.gz
 WORKDIR packmol
 ENV PACKMOLDIR /workspace/build/packmol
